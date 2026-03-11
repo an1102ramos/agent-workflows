@@ -1,0 +1,31 @@
+{
+  "name": "@rioagentflow/workflows",
+  "version": "1.0.0",
+  "description": "Ready-to-use AI agent workflows for Antigravity, Cursor, and more.",
+  "main": "bin/cli.js",
+  "bin": {
+    "rioagentflow-workflows": "./bin/cli.js"
+  },
+  "files": [
+    "bin/",
+    "src/",
+    "workflows/"
+  ],
+  "scripts": {
+    "test": "node --test tests/**/*.test.js"
+  },
+  "keywords": [
+    "antigravity",
+    "workflows",
+    "ai-agent",
+    "cursor",
+    "codex",
+    "ai",
+    "cli"
+  ],
+  "author": "rio",
+  "license": "MIT",
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
