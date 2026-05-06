@@ -15,6 +15,7 @@ const command = args.find((a) => !a.startsWith('-'));
 const flags = {
   force: args.includes('--force'),
   help: args.includes('--help') || args.includes('-h'),
+  version: args.includes('--version') || args.includes('-v'),
   tool: (() => {
     const idx = args.indexOf('--tool');
     return idx !== -1 && args[idx + 1] ? args[idx + 1] : null;
@@ -87,6 +88,12 @@ function resolveAdapter() {
 
 function main() {
   try {
+    if (flags.version) {
+      const pkg = require('../package.json');
+      console.log(`v${pkg.version}`);
+      process.exit(0);
+    }
+
     if (flags.help || !command) {
       showHelp();
       process.exit(0);
@@ -114,7 +121,11 @@ function main() {
       }
     }
   } catch (err) {
-    logger.error(`Unexpected error: ${err.message}`);
+    if (err.code === 'EACCES') {
+      logger.error(`Permission denied: Cannot write to target directory. Try using sudo.`);
+    } else {
+      logger.error(`Unexpected error: ${err.message}`);
+    }
     process.exit(1);
   }
 }

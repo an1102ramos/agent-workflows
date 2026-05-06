@@ -1,10 +1,10 @@
 {
   "name": "@rioagentflow/workflows",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Ready-to-use AI agent workflows for Antigravity, Cursor, and more.",
   "main": "bin/cli.js",
   "bin": {
-    "rioagentflow-workflows": "./bin/cli.js"
+    "rioagentflow-workflows": "bin/cli.js"
   },
   "files": [
     "bin/",
