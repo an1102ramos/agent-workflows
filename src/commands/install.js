@@ -40,6 +40,41 @@ function installToDir(sourceDir, targetDir, files, { force = false }) {
   return { installed, skipped };
 }
 
+function installAsSkills(sourceDir, skillsDir, files, { force = false }) {
+  let installed = 0;
+  let skipped = 0;
+
+  ensureDir(skillsDir);
+
+  for (const file of files) {
+    const skillName = path.basename(file, '.md');
+    const skillDir = path.join(skillsDir, skillName);
+    const src = path.join(sourceDir, file);
+    const dest = path.join(skillDir, 'SKILL.md');
+
+    ensureDir(skillDir);
+
+    const result = copyFile(src, dest, { force });
+
+    switch (result.status) {
+      case 'copied':
+        logger.success(`${skillName}/SKILL.md`);
+        installed++;
+        break;
+      case 'overwritten':
+        logger.success(`${skillName}/SKILL.md ${logger.dim || ''}(overwritten)`);
+        installed++;
+        break;
+      case 'skipped':
+        logger.skip(`${skillName}/SKILL.md (already exists, use --force to overwrite)`);
+        skipped++;
+        break;
+    }
+  }
+
+  return { installed, skipped };
+}
+
 function install(adapter, { force = false } = {}) {
   const sourceDir = path.join(__dirname, '../../workflows', adapter.workflowsDir);
   const targetDir = expandHome(adapter.targetDir);
@@ -64,7 +99,7 @@ function install(adapter, { force = false } = {}) {
     const claudeSkillsDir = path.join(claudeDir, 'skills');
     logger.heading(`📋 Detected ~/.claude — installing to Claude skills...`);
 
-    const result = installToDir(sourceDir, claudeSkillsDir, files, { force });
+    const result = installAsSkills(sourceDir, claudeSkillsDir, files, { force });
 
     logger.summary(result.installed, result.skipped, 'installed');
     logger.info(`Target: ${claudeSkillsDir}`);
